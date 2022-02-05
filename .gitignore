@@ -1,0 +1,5 @@
+node_modules/
+dist/
+
+# Uncomment in your real project to avoid exposing secrets
+#.env

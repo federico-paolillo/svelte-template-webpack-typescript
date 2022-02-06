@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PathsPlugin = require("tsconfig-paths-webpack-plugin").default;
 const ESLintPlugin = require("eslint-webpack-plugin");
 
+const { createSveltePreprocessor } = require("./svelte.config.js");
+
 const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
 
@@ -49,10 +51,7 @@ module.exports = {
             dev: true,
           },
           emitCss: true,
-          preprocess: sveltePreprocess({
-            tsconfigFile: "tsconfig.json",
-            sourceMap: true,
-          }),
+          preprocess: createSveltePreprocessor(),
         },
       },
       {

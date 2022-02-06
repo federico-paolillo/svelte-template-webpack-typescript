@@ -1,5 +1,3 @@
-/// <reference types="svelte" />
-
 import App from "@svelte-app/App.svelte";
 
 const app = new App({

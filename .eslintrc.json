@@ -16,7 +16,7 @@
     }
   ],
   "plugins": ["@typescript-eslint", "svelte3"],
-  "ignorePatterns": "webpack.config.js",
+  "ignorePatterns": ["webpack.config.js", "svelte.config.js"],
   "rules": {
     "no-console": "warn"
   },

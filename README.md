@@ -16,7 +16,7 @@ To run the application in development mode run in a terminal `npm start` and nav
 
 If the app greets you in italian, it works !
 
-To check for issues in your Svelte files, you can run `npm run svelte-check` which uses [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check).
+To check for issues in your Svelte files, you can run `npm run check` which uses [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check).
 
 Additionally, `npm run lint` will use [`eslint`](https://github.com/eslint/eslint) with Svelte specific plugin [`eslint-plugin-svelte3`](https://github.com/sveltejs/eslint-plugin-svelte3) to check your TypeScript and Svelte files for any questionable practice.
 
@@ -29,13 +29,11 @@ I did not add Hot Module Reload **yet**.
 Like any frontend framework, the tooling required has many moving parts with some weird bits that are hard to understand without an explanation.
 
 Starting from the `tsconfig.json`, we extend (like the official template) `@tsconfig/svelte` from [tsconfig/bases](https://github.com/tsconfig/bases).  
-[As the documentation specifies](https://github.com/tsconfig/bases#svelte-tsconfigjson), [after version 2.0.0](https://github.com/tsconfig/bases/pull/55) of `@tsconfig/svelte` compiler option `types: ["svelte"]` was removed, so we have to include either in a `.d.ts` file or in `main.ts` the [Svelte module types](https://github.com/sveltejs/svelte/blob/master/src/runtime/ambient.ts) using `/// <reference types="svelte" />` this will allow to import `.svelte` files and will make sure that `ts-loader` is able to load TypeScript during compilation successfully.
+[As the documentation specifies](https://github.com/tsconfig/bases#svelte-tsconfigjson), [after version 2.0.0](https://github.com/tsconfig/bases/pull/55) of `@tsconfig/svelte` compiler option `types: ["svelte"]` was removed, so we have to include either in a `.d.ts` file or in `main.ts` the [Svelte module types](https://github.com/sveltejs/svelte/blob/master/src/runtime/ambient.ts) using `/// <reference types="svelte" />` this will allow to import `.svelte` files and will make sure that `ts-loader` is able to load TypeScript during compilation successfully. In this template I've setup a `global.d.ts` that can contain all the extra type definitions that should be available globally.
 
-The application can be configured using [dotenv](https://github.com/motdotla/dotenv) files, there is one `.env.example` that should be checked-in and contains all the possible configuration entries (with example values) that _must be_ specified in the application `.env` file.  
-Once you have configured a value you can access it using `proces.env.<variable>`.  
-[As the author of `dotenv` recommends](https://github.com/motdotla/dotenv#should-i-commit-my-env-file), the application `.env` file _should not_ be checked in as it will contain the real secret values.  
-Ideally, all your configuration values should start with `SVELTE_APP_` to avoid exposing your build server environment variables when bundling, but this rule is not enforced.
-_Note:_ to avoid having to create an `.env` file I've commited one as an example and commented the corresponding `.gitignore` line.
+The application can be configured using [dotenv](https://github.com/motdotla/dotenv) files, there is one `.env.example` that should be checked-in and contains all the possible configuration entries (with example values) that _must be_ specified in the application `.env` file. Once you have configured a value you can access it using `proces.env.<variable>`. [As the author of `dotenv` recommends](https://github.com/motdotla/dotenv#should-i-commit-my-env-file), the application `.env` file _should not_ be checked in as it will contain the real secret values.  
+Note that, ideally, all your configuration values should start with `SVELTE_APP_` to avoid exposing your build server environment variables when bundling, but this rule is not enforced.  
+To avoid having to create an `.env` file after cloning the template I've commited one as an example and commented the corresponding `.gitignore` line.
 
 [`svelte-preprocess`](https://github.com/sveltejs/svelte-preprocess) is installed and is used by [`svelte-loader`](https://github.com/sveltejs/svelte-loader). `svelte-preprocess` is necessary because Svelte [does not understand TypeScript](https://github.com/sveltejs/svelte-preprocess#what-is-it) so we need a middle man to transform TypeScript to JavaScript so that `svelte-loader` (and in turn the Svelte compiler) is able to work its magic.  
 `svelte-preprocess` is configured in [auto-processing mode](https://github.com/sveltejs/svelte-preprocess/blob/main/docs/preprocessing.md#auto-preprocessing) with `svelte-loader` in `webpack.config.js`
@@ -57,3 +55,5 @@ To avoid confusing relative imports I've added a `paths` configuration to TypeSc
 Build time validation is provided by the Webpack plugin [eslint-webpack-plugin](https://github.com/webpack-contrib/eslint-webpack-plugin) for which only errors will fail the build.
 
 In `.eslintrc.json` there is one global variable enable: `process`. This allows to reference `process.env` without issues throught the codebase.
+
+`svelte.config.js` is required to make sure that [`svelte-vscode`](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-vscode) works correctly with TypeScript [as specified in the language tools documentation](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/in-general.md#generic-setup). To make sure that we can share the same configuration between `svelte-vscode` and `svelte-loader` the preprocess builder has been exported from `svelte.config.js`.

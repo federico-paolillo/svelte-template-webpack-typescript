@@ -28,8 +28,8 @@
     "webpack-dev-server": "^4.7.4"
   },
   "scripts": {
-    "build": "webpack",
-    "start": "webpack serve",
+    "build": "webpack --mode development",
+    "start": "webpack serve --mode development",
     "check": "svelte-check",
     "lint": "eslint src/",
     "prettify": "prettier --write src/"

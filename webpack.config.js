@@ -1,15 +1,11 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const sveltePreprocess = require("svelte-preprocess");
 const DotenvWebpackPlugin = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PathsPlugin = require("tsconfig-paths-webpack-plugin").default;
 const ESLintPlugin = require("eslint-webpack-plugin");
 
 const { createSveltePreprocessor } = require("./svelte.config.js");
-
-const mode = process.env.NODE_ENV || "development";
-const prod = mode === "production";
 
 const SRC_FOLDER = path.resolve(__dirname, "src/");
 const DIST_FOLDER = path.resolve(__dirname, "dist/");
@@ -49,9 +45,16 @@ module.exports = {
         options: {
           compilerOptions: {
             dev: true,
+            enableSourcemap: true,
           },
-          emitCss: true,
+          emitCss: false,
           preprocess: createSveltePreprocessor(),
+          hotReload: true,
+          hotOptions: {
+            noPreserveState: true,
+            noReload: false,
+            optimistic: false,
+          },
         },
       },
       {
@@ -70,6 +73,9 @@ module.exports = {
   optimization: {
     moduleIds: "deterministic",
     runtimeChunk: "single",
+    splitChunks: {
+      chunks: "initial",
+    },
   },
   devServer: {
     client: {
@@ -92,8 +98,8 @@ module.exports = {
     open: false,
     historyApiFallback: true,
     https: false,
+    hot: true,
   },
-  mode,
   plugins: [
     new MiniCssExtractPlugin({
       filename: "[contenthash].[name].css",
@@ -117,5 +123,5 @@ module.exports = {
       emitWarning: true,
     }),
   ],
-  devtool: prod ? false : "eval-source-map",
+  devtool: "source-map",
 };

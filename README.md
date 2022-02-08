@@ -20,10 +20,6 @@ To check for issues in your Svelte files, you can run `npm run check` which uses
 
 Additionally, `npm run lint` will use [`eslint`](https://github.com/eslint/eslint) with Svelte specific plugin [`eslint-plugin-svelte3`](https://github.com/sveltejs/eslint-plugin-svelte3) to check your TypeScript and Svelte files for any questionable practice.
 
-## Hot Module Reload
-
-I did not add Hot Module Reload **yet**.
-
 ## Description
 
 Like any frontend framework, the tooling required has many moving parts with some weird bits that are hard to understand without an explanation.
@@ -57,3 +53,5 @@ Build time validation is provided by the Webpack plugin [eslint-webpack-plugin](
 In `.eslintrc.json` there is one global variable enable: `process`. This allows to reference `process.env` without issues throught the codebase.
 
 `svelte.config.js` is required to make sure that [`svelte-vscode`](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-vscode) works correctly with TypeScript [as specified in the language tools documentation](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/in-general.md#generic-setup). To make sure that we can share the same configuration between `svelte-vscode` and `svelte-loader` the preprocess builder has been exported from `svelte.config.js`.
+
+Hot Module Replacement has been enabled using `webpack-dev-server` through `svelte-loader` that in turns uses [`svelte-hmr`](https://github.com/sveltejs/svelte-hmr) so all the options that can be configured in `svelte-loader` are forwarded to `svelte-hmr`. This enables automatic module replacement when a file is changed, making development faster.
